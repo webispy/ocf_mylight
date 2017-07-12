@@ -1,0 +1,12 @@
+#
+# For a description of the syntax of this configuration file,
+# see kconfig-language at https://www.kernel.org/doc/Documentation/kbuild/kconfig-language.txt
+#
+
+config EXAMPLES_OCFMYLIGHT
+	bool "OCF My Light sample application"
+	default n
+	depends on ENABLE_IOTIVITY
+	---help---
+		Enable OCF My Light example application
+
