@@ -53,6 +53,7 @@ static void _ll_rep_value(OCRepPayloadValue *values)
 	while (cur)
 	{
 		printf("{\"%s\": ", cur->name);
+
 		switch (cur->type)
 		{
 		case OCREP_PROP_INT:
@@ -80,6 +81,7 @@ static void _ll_rep_value(OCRepPayloadValue *values)
 			printf("unknown} ");
 			break;
 		}
+
 		cur = cur->next;
 	}
 }
@@ -120,9 +122,7 @@ void ocf_mylight_verbose_payload(const char *indent, OCPayload *payload)
 	if (payload->type == PAYLOAD_TYPE_REPRESENTATION)
 		_payload_representation(indent, (OCRepPayload *) payload);
 	else
-	{
 		printf("%s  - payload-type: %d\n", indent, payload->type);
-	}
 }
 
 void ocf_mylight_verbose_request(OCEntityHandlerFlag flag,
@@ -136,7 +136,7 @@ void ocf_mylight_verbose_request(OCEntityHandlerFlag flag,
 
 	printf("  - method: %d ( ", req->method);
 	_method(req->method);
-	printf(" \n");
+	printf(")\n");
 
 	printf("  - query: '%s'\n", req->query);
 	printf("  - dev_addr: adapter:%d, flags:0x%X, port:%d\n",
@@ -151,10 +151,8 @@ void ocf_mylight_verbose_request(OCEntityHandlerFlag flag,
 				req->numRcvdVendorSpecificHeaderOptions);
 
 		for (i = 0; i < req->numRcvdVendorSpecificHeaderOptions; i++)
-		{
 			printf("  - [%d] proto_id=%d, option_id=0x%x, option_len=%d\n", i,
 					opt[i].protocolID, opt[i].optionID, opt[i].optionLength);
-		}
 	}
 
 	ocf_mylight_verbose_payload("", req->payload);
@@ -177,10 +175,8 @@ void ocf_mylight_verbose_response(OCEntityHandlerResponse *resp)
 				resp->numSendVendorSpecificHeaderOptions);
 
 		for (i = 0; i < resp->numSendVendorSpecificHeaderOptions; i++)
-		{
 			printf("  - [%d] proto_id=%d, option_id=0x%x, option_len=%d\n", i,
 					opt[i].protocolID, opt[i].optionID, opt[i].optionLength);
-		}
 	}
 
 	ocf_mylight_verbose_payload("", resp->payload);

@@ -21,7 +21,7 @@ struct light_resource
 	int gpio;
 };
 
-static struct light_resource Light[] =
+static struct light_resource _light[] =
 {
 	{
 		.handle = NULL,
@@ -67,13 +67,13 @@ static int find_light(OCResourceHandle handle)
 {
 	unsigned int i;
 
-	for (i = 0; i < sizeof(Light) / sizeof(struct light_resource); i++)
+	for (i = 0; i < sizeof(_light) / sizeof(struct light_resource); i++)
 	{
-		if (Light[i].handle == handle)
+		if (_light[i].handle == handle)
 			return i;
 	}
 
-	DBG("Can't find Light");
+	DBG("Can't find light");
 	return -1;
 }
 
@@ -91,11 +91,12 @@ static OCEntityHandlerResult on_get(OCEntityHandlerFlag flag _UNUSED_,
 		return OC_EH_ERROR;
 
 	payload = OCRepPayloadCreate();
-	OCRepPayloadSetUri(payload, Light[id].uri);
-	OCRepPayloadSetPropBool(payload, "value", Light[id].value);
 	OCRepPayloadAddResourceType(payload, "oic.r.switch.binary");
 	OCRepPayloadAddInterface(payload, "oic.if.baseline");
 	OCRepPayloadAddInterface(payload, "oic.if.a");
+
+	OCRepPayloadSetUri(payload, _light[id].uri);
+	OCRepPayloadSetPropBool(payload, "value", _light[id].value);
 
 	memset(&resp, 0, sizeof(OCEntityHandlerResponse));
 	resp.requestHandle = req->requestHandle;
@@ -134,22 +135,21 @@ static OCEntityHandlerResult on_put_post(OCEntityHandlerFlag flag _UNUSED_,
 	if (id < 0)
 		return OC_EH_ERROR;
 
-	if (OCRepPayloadGetPropBool((const OCRepPayload *) req->payload, "value",
-			&value))
-	{
-		Light[id].value = value;
+	payload = (OCRepPayload *) req->payload;
+	if (OCRepPayloadGetPropBool(payload, "value", &value)) {
+		_light[id].value = value;
+		MSG("value changed to %d", value);
 	}
 
-	MSG("value changed to %d", value);
-
-	gpio_write(Light[id].gpio, Light[id].value);
+	gpio_write(_light[id].gpio, _light[id].value);
 
 	payload = OCRepPayloadCreate();
-	OCRepPayloadSetUri(payload, Light[id].uri);
-	OCRepPayloadSetPropBool(payload, "value", Light[id].value);
 	OCRepPayloadAddResourceType(payload, "oic.r.switch.binary");
 	OCRepPayloadAddInterface(payload, "oic.if.baseline");
 	OCRepPayloadAddInterface(payload, "oic.if.a");
+
+	OCRepPayloadSetUri(payload, _light[id].uri);
+	OCRepPayloadSetPropBool(payload, "value", _light[id].value);
 
 	memset(&resp, 0, sizeof(OCEntityHandlerResponse));
 	resp.requestHandle = req->requestHandle;
@@ -216,10 +216,10 @@ int ocf_mylight_light_init()
 	OCStackResult ret;
 	unsigned int i;
 
-	for (i = 0; i < sizeof(Light) / sizeof(struct light_resource); i++)
+	for (i = 0; i < sizeof(_light) / sizeof(struct light_resource); i++)
 	{
-		ret = OCCreateResource(&(Light[i].handle), "oic.r.switch.binary",
-				"oic.if.a", Light[i].uri, ocf_mylight_handler, &light_ops,
+		ret = OCCreateResource(&(_light[i].handle), "oic.r.switch.binary",
+				"oic.if.a", _light[i].uri, ocf_mylight_handler, &light_ops,
 				OC_DISCOVERABLE | OC_OBSERVABLE);
 		if (ret != OC_STACK_OK)
 		{
@@ -228,7 +228,8 @@ int ocf_mylight_light_init()
 		}
 
 		MSG("Light resource created. <id: %u>", i);
-		MSG(" - resource: 0x%p", Light[i].handle);
+		MSG(" - resource: 0x%p", _light[i].handle);
+		MSG(" - uri: '%s'", _light[i].uri);
 	}
 
 	return 0;

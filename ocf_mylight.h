@@ -1,14 +1,10 @@
 #ifndef __MYOCF_H__
 #define __MYOCF_H__
 
-#ifndef CONFIG_ARCH_BOARD_ARTIK053
-#include "iotivity_config.h"
-#endif
-
-#include "ocstack.h"
-#include "logger.h"
-#include "platform_features.h"
-#include "ocpayload.h"
+#include <iotivity_config.h>
+#include <ocstack.h>
+#include <logger.h>
+#include <ocpayload.h>
 
 #define _UNUSED_ __attribute__((unused))
 

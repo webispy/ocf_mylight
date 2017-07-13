@@ -7,7 +7,7 @@
 
 #include "ocf_mylight.h"
 
-static OCDeviceInfo deviceInfo =
+static OCDeviceInfo _di =
 {
 	.specVersion = "core.1.1.0"
 };
@@ -19,21 +19,24 @@ static OCEntityHandlerResult on_get(OCEntityHandlerFlag flag _UNUSED_,
 	if (uri)
 	{
 		if (!strcmp(uri, "/oic/invalid"))
-		{
 			return OC_EH_RESOURCE_NOT_FOUND;
-		}
 	}
 
 	DBG("dev on_get");
 
+	/* TODO */
+
 	return OC_EH_OK;
 }
 
-static OCEntityHandlerResult on_put(OCEntityHandlerFlag flag _UNUSED_,
+static OCEntityHandlerResult on_put_post(OCEntityHandlerFlag flag _UNUSED_,
 		OCEntityHandlerRequest *req _UNUSED_, char *uri _UNUSED_,
 		void *user_data _UNUSED_)
 {
-	DBG("dev on_put");
+	if (req->method == OC_REST_PUT)
+		DBG("dev on_put");
+	else if (req->method == OC_REST_POST)
+		DBG("dev on_ppost");
 
 	return OC_EH_FORBIDDEN;
 }
@@ -50,14 +53,14 @@ static OCEntityHandlerResult on_del(OCEntityHandlerFlag flag _UNUSED_,
 struct ocf_dev_ops dev_ops =
 {
 	.get = on_get,
-	.put = on_put,
-	.post = on_put,
+	.put = on_put_post,
+	.post = on_put_post,
 	.del = on_del
 };
 
 const char *ocf_mylight_device_get_name()
 {
-	return deviceInfo.deviceName;
+	return _di.deviceName;
 }
 
 int ocf_mylight_device_set_name(const char *name)
@@ -65,11 +68,13 @@ int ocf_mylight_device_set_name(const char *name)
 	if (!name)
 		return -1;
 
-	free(deviceInfo.deviceName);
-	deviceInfo.deviceName = strdup(name);
+	if (_di.deviceName)
+		free(_di.deviceName);
+
+	_di.deviceName = strdup(name);
 
 	OCSetPropertyValue(PAYLOAD_TYPE_DEVICE, OC_RSRVD_DEVICE_NAME,
-			deviceInfo.deviceName);
+			_di.deviceName);
 
 	return 0;
 }
@@ -80,15 +85,15 @@ int ocf_mylight_device_init()
 
 	OCSetDefaultDeviceEntityHandler(ocf_mylight_dev_handler, &dev_ops);
 
-	deviceInfo.deviceName = strdup("ARTIK-053-Light");
-	deviceInfo.dataModelVersions = OCCreateOCStringLL("res.1.1.0,sh.1.1.0");
-	deviceInfo.types = OCCreateOCStringLL("oic.d.light");
+	_di.deviceName = strdup("ARTIK-053-Light");
+	_di.dataModelVersions = OCCreateOCStringLL("res.1.1.0,sh.1.1.0");
+	_di.types = OCCreateOCStringLL("oic.d.light");
 
-	ret = OCSetDeviceInfo(deviceInfo);
+	ret = OCSetDeviceInfo(_di);
 	if (ret != OC_STACK_OK)
 	{
-		DBG("Device Registration failed!");
-		exit(EXIT_FAILURE);
+		DBG("Device Registration failed! (ret=%d)", ret);
+		return -1;
 	}
 
 	return 0;

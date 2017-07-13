@@ -48,12 +48,27 @@ static int server_cb(int argc _UNUSED_, char *argv[] _UNUSED_)
 	return 0;
 }
 
+static void _timestamp()
+{
+	struct tm stamp;
+	struct timespec tspec;
+	char timebuf[32];
+
+	clock_gettime(CLOCK_REALTIME, &tspec);
+	localtime_r(&tspec.tv_sec, &stamp);
+
+	strftime(timebuf, sizeof(timebuf), "%m-%d %H:%M:%S", &stamp);
+	printf("%s.%03ld", timebuf, tspec.tv_nsec / 1000000);
+}
+
 OCEntityHandlerResult ocf_mylight_handler(OCEntityHandlerFlag flag,
 		OCEntityHandlerRequest *req, void *user_data)
 {
 	struct ocf_ops *ops = user_data;
 	OCEntityHandlerResult ret = OC_EH_METHOD_NOT_ALLOWED;
 
+	printf("\n");
+	_timestamp();
 	MSG("\n<New request>");
 	ocf_mylight_verbose_request(flag, req);
 
@@ -93,6 +108,8 @@ OCEntityHandlerResult ocf_mylight_dev_handler(OCEntityHandlerFlag flag,
 	struct ocf_dev_ops *ops = user_data;
 	OCEntityHandlerResult ret = OC_EH_METHOD_NOT_ALLOWED;
 
+	printf("\n");
+	_timestamp();
 	MSG("\n<New request for device>");
 	ocf_mylight_verbose_request(flag, req);
 	MSG("  - uri: %s", uri);

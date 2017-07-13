@@ -17,7 +17,7 @@ struct conf_data
 	char *region;
 };
 
-static struct conf_data cd;
+static struct conf_data _cd;
 static OCResourceHandle _confhandle;
 
 static OCEntityHandlerResult on_get(OCEntityHandlerFlag flag _UNUSED_,
@@ -31,11 +31,11 @@ static OCEntityHandlerResult on_get(OCEntityHandlerFlag flag _UNUSED_,
 	OCRepPayloadAddInterface(payload, "oic.if.baseline");
 	OCRepPayloadAddInterface(payload, "oic.if.rw");
 
-	OCRepPayloadSetPropString(payload, "n", cd.name);
-	OCRepPayloadSetPropString(payload, "loc", cd.loc);
-	OCRepPayloadSetPropString(payload, "locn", cd.locn);
-	OCRepPayloadSetPropString(payload, "c", cd.currency);
-	OCRepPayloadSetPropString(payload, "r", cd.region);
+	OCRepPayloadSetPropString(payload, "n", _cd.name);
+	OCRepPayloadSetPropString(payload, "loc", _cd.loc);
+	OCRepPayloadSetPropString(payload, "locn", _cd.locn);
+	OCRepPayloadSetPropString(payload, "c", _cd.currency);
+	OCRepPayloadSetPropString(payload, "r", _cd.region);
 
 	memset(&resp, 0, sizeof(OCEntityHandlerResponse));
 	resp.requestHandle = req->requestHandle;
@@ -67,34 +67,34 @@ static OCEntityHandlerResult on_post(OCEntityHandlerFlag flag _UNUSED_,
 
 	if (OCRepPayloadGetPropString(input, "n", &val))
 	{
-		free(cd.name);
-		cd.name = val;
+		free(_cd.name);
+		_cd.name = val;
 
-		ocf_mylight_device_set_name(cd.name);
+		ocf_mylight_device_set_name(_cd.name);
 	}
 
 	if (OCRepPayloadGetPropString(input, "loc", &val))
 	{
-		free(cd.loc);
-		cd.loc = val;
+		free(_cd.loc);
+		_cd.loc = val;
 	}
 
 	if (OCRepPayloadGetPropString(input, "locn", &val))
 	{
-		free(cd.locn);
-		cd.locn = val;
+		free(_cd.locn);
+		_cd.locn = val;
 	}
 
 	if (OCRepPayloadGetPropString(input, "c", &val))
 	{
-		free(cd.currency);
-		cd.currency = val;
+		free(_cd.currency);
+		_cd.currency = val;
 	}
 
 	if (OCRepPayloadGetPropString(input, "r", &val))
 	{
-		free(cd.region);
-		cd.region = val;
+		free(_cd.region);
+		_cd.region = val;
 	}
 
 	payload = OCRepPayloadCreate();
@@ -102,11 +102,11 @@ static OCEntityHandlerResult on_post(OCEntityHandlerFlag flag _UNUSED_,
 	OCRepPayloadAddInterface(payload, "oic.if.baseline");
 	OCRepPayloadAddInterface(payload, "oic.if.rw");
 
-	OCRepPayloadSetPropString(payload, "n", cd.name);
-	OCRepPayloadSetPropString(payload, "loc", cd.loc);
-	OCRepPayloadSetPropString(payload, "locn", cd.locn);
-	OCRepPayloadSetPropString(payload, "c", cd.currency);
-	OCRepPayloadSetPropString(payload, "r", cd.region);
+	OCRepPayloadSetPropString(payload, "n", _cd.name);
+	OCRepPayloadSetPropString(payload, "loc", _cd.loc);
+	OCRepPayloadSetPropString(payload, "locn", _cd.locn);
+	OCRepPayloadSetPropString(payload, "c", _cd.currency);
+	OCRepPayloadSetPropString(payload, "r", _cd.region);
 
 	memset(&resp, 0, sizeof(OCEntityHandlerResponse));
 	resp.requestHandle = req->requestHandle;
@@ -138,11 +138,11 @@ int ocf_mylight_configuration_init()
 {
 	OCStackResult ret;
 
-	cd.name = strdup(ocf_mylight_device_get_name());
-	cd.loc = strdup("37.532600,127.024612");
-	cd.locn = strdup("My home");
-	cd.region = strdup("Korea (Gyeonggi)");
-	cd.currency = strdup("KRW");
+	_cd.name = strdup(ocf_mylight_device_get_name());
+	_cd.loc = strdup("37.532600,127.024612");
+	_cd.locn = strdup("My home");
+	_cd.region = strdup("Korea (Gyeonggi)");
+	_cd.currency = strdup("KRW");
 
 	ret = OCCreateResource(&_confhandle, "oic.wk.con", "oic.if.rw",
 			"/oic/con", ocf_mylight_handler, &conf_ops, OC_DISCOVERABLE);
