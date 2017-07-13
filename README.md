@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/webispy/ocf_mylight.svg?branch=master)](https://travis-ci.org/webispy/ocf_mylight)
+
 # OCF Light sample
 - Smart Home Light sample.
 - You can control 2 LEDs on the ARTIK 053 STARTER BOARD (TizenRT version only)
