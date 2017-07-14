@@ -2,6 +2,7 @@
 #define __MYOCF_H__
 
 #include <iotivity_config.h>
+#include <platform_features.h>
 #include <ocstack.h>
 #include <logger.h>
 #include <ocpayload.h>
