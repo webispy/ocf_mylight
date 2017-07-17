@@ -4,7 +4,7 @@
     "supportedDeviceTypes": [ "oic.d.light" ],
     "icv": "core.1.1.0",
     "dmv": "res.1.1.0,sh.1.1.0",
-    "resources": [ "oic.r.switch.binary", "oic.wk.con" ],
+    "resources": [ "oic.r.switch.binary", "oic.wk.con", "oic.wk.mnt" ],
     "jurisdictionSwitch": false,
     "OTM": [ "oic.sec.doxm.jw" ],
     "implementsWKCON": true

@@ -50,5 +50,6 @@ int ocf_mylight_light_init();
 void ocf_mylight_light_exit();
 
 int ocf_mylight_configuration_init();
+int ocf_mylight_maintenance_init();
 
 #endif

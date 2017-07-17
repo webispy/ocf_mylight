@@ -23,6 +23,7 @@ static int server_cb(int argc _UNUSED_, char *argv[] _UNUSED_)
 	ocf_mylight_playform_init();
 	ocf_mylight_device_init();
 	ocf_mylight_configuration_init();
+	ocf_mylight_maintenance_init();
 	ocf_mylight_light_init();
 
 	// Break from loop with Ctrl-C
