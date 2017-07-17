@@ -130,6 +130,9 @@ void ocf_mylight_verbose_request(OCEntityHandlerFlag flag,
 {
 	MSG("IncomingRequest: (id: %d)", req->messageID);
 	printf("  - resourceHandle: 0x%p\n", req->resource);
+	printf("    - uri: '%s'\n", OCGetResourceUri(req->resource));
+	printf("    - property: 0x%X\n",
+			OCGetResourceProperties(req->resource));
 	printf("  - flag: 0x%X ( ", flag);
 	_flag(flag);
 	printf(")\n");
