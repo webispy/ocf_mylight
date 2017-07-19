@@ -64,11 +64,11 @@ index 249730d..1f6b36c 100644
 
 - Build with debug message
 ```sh
-scons -j8 RELEASE=False
+scons -j8 RELEASE=False SECURED=1
 ```
 - Build without debug message
 ```sh
-scons -j8 RELEASE=True LOGGING=False
+scons -j8 RELEASE=True LOGGING=False SECURED=1
 ```
 
 # Run
@@ -85,12 +85,26 @@ TASH> ocf_mylight
 
 ## Linux
 ### Iotivity Debug mode
+#### Create a dat file (Convert json to dat using json2cbor tool)
+```sh
+cd {iotivity-repo}/out/linux/x86_64/debug/resource/csdk/stack/samples/linux/ocf_mylight
+../../../../security/tool/json2cbor json/oic_svr_db_server_justworks.json oic_svr_db_server.dat
+```
+
+#### Run
 ```sh
 cd {iotivity-repo}/out/linux/x86_64/debug/resource/csdk/stack/samples/linux/ocf_mylight
 ./ocf_mylight
 ```
 
 ### Iotivity Release mode
+#### Create a dat file (Convert json to dat using json2cbor tool)
+```sh
+cd {iotivity-repo}/out/linux/x86_64/release/resource/csdk/stack/samples/linux/ocf_mylight
+../../../../security/tool/json2cbor json/oic_svr_db_server_justworks.json oic_svr_db_server.dat
+```
+
+#### Run
 ```sh
 cd {iotivity-repo}/out/linux/x86_64/release/resource/csdk/stack/samples/linux/ocf_mylight
 ./ocf_mylight
