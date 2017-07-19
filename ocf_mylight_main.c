@@ -12,12 +12,11 @@ static int gQuitFlag = 0;
 static int server_cb(int argc _UNUSED_, char *argv[] _UNUSED_)
 {
 	MSG("IoTivity Demo - IOTIVITY version is %s", IOTIVITY_VERSION);
-	MSG("OCServer is starting...");
+	MSG("OCF My Light Server is starting...");
 
 	ocf_mylight_security_init();
 
-	if (OCInit(NULL, 0, OC_SERVER) != OC_STACK_OK)
-	{
+	if (OCInit(NULL, 0, OC_SERVER) != OC_STACK_OK) {
 		DBG("OCStack init error");
 		return 0;
 	}
@@ -28,14 +27,11 @@ static int server_cb(int argc _UNUSED_, char *argv[] _UNUSED_)
 	ocf_mylight_maintenance_init();
 	ocf_mylight_light_init();
 
-	// Break from loop with Ctrl-C
 	MSG("Entering ocserver main loop...");
 
-	while (!gQuitFlag)
-	{
+	while (!gQuitFlag) {
 		usleep(10000);
-		if (OCProcess() != OC_STACK_OK)
-		{
+		if (OCProcess() != OC_STACK_OK) {
 			DBG("OCStack process error");
 			return 0;
 		}
@@ -78,8 +74,7 @@ OCEntityHandlerResult ocf_mylight_handler(OCEntityHandlerFlag flag,
 	if (!ops)
 		return ret;
 
-	if (flag & OC_REQUEST_FLAG)
-	{
+	if (flag & OC_REQUEST_FLAG) {
 		if (OC_REST_GET == req->method && ops->get)
 			ret = ops->get(flag, req, user_data);
 		else if (OC_REST_PUT == req->method && ops->put)
@@ -90,9 +85,9 @@ OCEntityHandlerResult ocf_mylight_handler(OCEntityHandlerFlag flag,
 			ret = ops->del(flag, req, user_data);
 	}
 
-	if (flag & OC_OBSERVE_FLAG)
-	{
-		if (OC_OBSERVE_REGISTER == req->obsInfo.action && ops->register_observe)
+	if (flag & OC_OBSERVE_FLAG) {
+		if (OC_OBSERVE_REGISTER == req->obsInfo.action
+				&& ops->register_observe)
 			ret = ops->register_observe(flag, req, user_data);
 		else if (OC_OBSERVE_DEREGISTER == req->obsInfo.action
 				&& ops->deregister_observe)
@@ -120,8 +115,7 @@ OCEntityHandlerResult ocf_mylight_dev_handler(OCEntityHandlerFlag flag,
 	if (!ops)
 		return ret;
 
-	if (flag & OC_REQUEST_FLAG)
-	{
+	if (flag & OC_REQUEST_FLAG) {
 		if (OC_REST_GET == req->method && ops->get)
 			ret = ops->get(flag, req, uri, user_data);
 		else if (OC_REST_PUT == req->method && ops->put)

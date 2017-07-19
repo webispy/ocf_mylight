@@ -39,8 +39,7 @@ static void _ll(OCStringLL *ll)
 {
 	OCStringLL *cur = ll;
 
-	while (cur)
-	{
+	while (cur) {
 		printf("%s ", cur->value);
 		cur = cur->next;
 	}
@@ -50,12 +49,10 @@ static void _ll_rep_value(OCRepPayloadValue *values)
 {
 	OCRepPayloadValue *cur = values;
 
-	while (cur)
-	{
+	while (cur) {
 		printf("{\"%s\": ", cur->name);
 
-		switch (cur->type)
-		{
+		switch (cur->type) {
 		case OCREP_PROP_INT:
 			printf("%zd} ", cur->i);
 			break;
@@ -92,22 +89,19 @@ static void _payload_representation(const char *indent, OCRepPayload *payload)
 			"Representation");
 	printf("%s    - uri: %s\n", indent, payload->uri);
 
-	if (payload->types)
-	{
+	if (payload->types) {
 		printf("%s    - types: ", indent);
 		_ll(payload->types);
 		printf("\n");
 	}
 
-	if (payload->interfaces)
-	{
+	if (payload->interfaces) {
 		printf("%s    - interfaces: ", indent);
 		_ll(payload->interfaces);
 		printf("\n");
 	}
 
-	if (payload->values)
-	{
+	if (payload->values) {
 		printf("%s    - values: ", indent);
 		_ll_rep_value(payload->values);
 		printf("\n");
@@ -123,6 +117,17 @@ void ocf_mylight_verbose_payload(const char *indent, OCPayload *payload)
 		_payload_representation(indent, (OCRepPayload *) payload);
 	else
 		printf("%s  - payload-type: %d\n", indent, payload->type);
+}
+
+static void _header_options(OCHeaderOption *opt, uint8_t count)
+{
+	int i;
+
+	printf("  - vendor specific header count: %d\n", count);
+	for (i = 0; i < count; i++)
+		printf("  - [%d] proto_id=%d, option_id=0x%x, option_len=%d\n",
+				i, opt[i].protocolID, opt[i].optionID,
+				opt[i].optionLength);
 }
 
 void ocf_mylight_verbose_request(OCEntityHandlerFlag flag,
@@ -143,20 +148,12 @@ void ocf_mylight_verbose_request(OCEntityHandlerFlag flag,
 
 	printf("  - query: '%s'\n", req->query);
 	printf("  - dev_addr: adapter:%d, flags:0x%X, port:%d\n",
-			req->devAddr.adapter, req->devAddr.flags, req->devAddr.port);
+			req->devAddr.adapter, req->devAddr.flags,
+			req->devAddr.port);
 
 	if (req->numRcvdVendorSpecificHeaderOptions > 0)
-	{
-		int i;
-		OCHeaderOption *opt = req->rcvdVendorSpecificHeaderOptions;
-
-		printf("  - vendor specific header count: %d\n",
+		_header_options(req->rcvdVendorSpecificHeaderOptions,
 				req->numRcvdVendorSpecificHeaderOptions);
-
-		for (i = 0; i < req->numRcvdVendorSpecificHeaderOptions; i++)
-			printf("  - [%d] proto_id=%d, option_id=0x%x, option_len=%d\n", i,
-					opt[i].protocolID, opt[i].optionID, opt[i].optionLength);
-	}
 
 	ocf_mylight_verbose_payload("", req->payload);
 }
@@ -170,17 +167,8 @@ void ocf_mylight_verbose_response(OCEntityHandlerResponse *resp)
 	printf("  - persistentBufferFlag: %d\n", resp->persistentBufferFlag);
 
 	if (resp->numSendVendorSpecificHeaderOptions > 0)
-	{
-		int i;
-		OCHeaderOption *opt = resp->sendVendorSpecificHeaderOptions;
-
-		printf("  - vendor specific header count: %d\n",
+		_header_options(resp->sendVendorSpecificHeaderOptions,
 				resp->numSendVendorSpecificHeaderOptions);
-
-		for (i = 0; i < resp->numSendVendorSpecificHeaderOptions; i++)
-			printf("  - [%d] proto_id=%d, option_id=0x%x, option_len=%d\n", i,
-					opt[i].protocolID, opt[i].optionID, opt[i].optionLength);
-	}
 
 	ocf_mylight_verbose_payload("", resp->payload);
 }

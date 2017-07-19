@@ -16,8 +16,7 @@ static OCEntityHandlerResult on_get(OCEntityHandlerFlag flag _UNUSED_,
 		OCEntityHandlerRequest *req _UNUSED_, char *uri _UNUSED_,
 		void *user_data _UNUSED_)
 {
-	if (uri)
-	{
+	if (uri) {
 		if (!strcmp(uri, "/oic/invalid"))
 			return OC_EH_RESOURCE_NOT_FOUND;
 	}
@@ -90,8 +89,7 @@ int ocf_mylight_device_init()
 	_di.types = OCCreateOCStringLL("oic.d.light");
 
 	ret = OCSetDeviceInfo(_di);
-	if (ret != OC_STACK_OK)
-	{
+	if (ret != OC_STACK_OK) {
 		DBG("Device Registration failed! (ret=%d)", ret);
 		return -1;
 	}

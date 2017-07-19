@@ -57,17 +57,21 @@ static OCEntityHandlerResult on_post(OCEntityHandlerFlag flag _UNUSED_,
 	OCRepPayloadAddInterface(payload, "oic.if.rw");
 
 	if (OCRepPayloadGetPropBool(input, "fr", &val)) {
-		/* Do Factory Reset */
-		MSG("Factory Reset request");
 		OCRepPayloadSetPropBool(payload, "fr", true);
+		/**
+		 * Do Factory Reset
+		 */
+		MSG("Factory Reset request");
 	} else {
 		OCRepPayloadSetPropBool(payload, "fr", false);
 	}
 
 	if (OCRepPayloadGetPropBool(input, "rb", &val)) {
-		/* Do Reboot */
-		MSG("Reboot request");
 		OCRepPayloadSetPropBool(payload, "rb", true);
+		/**
+		 * Do Reboot
+		 */
+		MSG("Reboot request");
 	} else {
 		OCRepPayloadSetPropBool(payload, "rb", false);
 	}
@@ -91,8 +95,7 @@ static OCEntityHandlerResult on_post(OCEntityHandlerFlag flag _UNUSED_,
 	return OC_EH_OK;
 }
 
-static struct ocf_ops mnt_ops =
-{
+static struct ocf_ops mnt_ops = {
 	.get = on_get,
 	.post = on_post
 };

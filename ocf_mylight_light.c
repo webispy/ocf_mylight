@@ -13,16 +13,14 @@
 
 #include "ocf_mylight.h"
 
-struct light_resource
-{
+struct light_resource {
 	OCResourceHandle handle;
 	bool value;
 	char *uri;
 	int gpio;
 };
 
-static struct light_resource _light[] =
-{
+static struct light_resource _light[] = {
 	{
 		.handle = NULL,
 		.value = false,
@@ -67,13 +65,13 @@ static int find_light(OCResourceHandle handle)
 {
 	unsigned int i;
 
-	for (i = 0; i < sizeof(_light) / sizeof(struct light_resource); i++)
-	{
+	for (i = 0; i < sizeof(_light) / sizeof(struct light_resource); i++) {
 		if (_light[i].handle == handle)
 			return i;
 	}
 
 	DBG("Can't find light");
+
 	return -1;
 }
 
@@ -106,8 +104,7 @@ static OCEntityHandlerResult on_get(OCEntityHandlerFlag flag _UNUSED_,
 
 	ocf_mylight_verbose_response(&resp);
 
-	if (OCDoResponse(&resp) != OC_STACK_OK)
-	{
+	if (OCDoResponse(&resp) != OC_STACK_OK) {
 		DBG("Error sending response");
 		OCRepPayloadDestroy(payload);
 		return OC_EH_ERROR;
@@ -159,8 +156,7 @@ static OCEntityHandlerResult on_put_post(OCEntityHandlerFlag flag _UNUSED_,
 
 	ocf_mylight_verbose_response(&resp);
 
-	if (OCDoResponse(&resp) != OC_STACK_OK)
-	{
+	if (OCDoResponse(&resp) != OC_STACK_OK) {
 		DBG("Sending response failed.");
 		OCRepPayloadDestroy(payload);
 		return OC_EH_ERROR;
@@ -180,8 +176,8 @@ static OCEntityHandlerResult on_del(OCEntityHandlerFlag flag _UNUSED_,
 }
 
 static OCEntityHandlerResult on_register_observe(
-		OCEntityHandlerFlag flag _UNUSED_, OCEntityHandlerRequest *req _UNUSED_,
-		void *user_data _UNUSED_)
+		OCEntityHandlerFlag flag _UNUSED_,
+		OCEntityHandlerRequest *req _UNUSED_, void *user_data _UNUSED_)
 {
 	DBG("Registration request with observation Id %d", req->obsInfo.obsId);
 
@@ -191,18 +187,18 @@ static OCEntityHandlerResult on_register_observe(
 }
 
 static OCEntityHandlerResult on_deregister_observe(
-		OCEntityHandlerFlag flag _UNUSED_, OCEntityHandlerRequest *req _UNUSED_,
-		void *user_data _UNUSED_)
+		OCEntityHandlerFlag flag _UNUSED_,
+		OCEntityHandlerRequest *req _UNUSED_, void *user_data _UNUSED_)
 {
-	DBG("De-registration request for observation Id %d", req->obsInfo.obsId);
+	DBG("De-registration request for observation Id %d",
+			req->obsInfo.obsId);
 
 	/* TODO */
 
 	return OC_EH_FORBIDDEN;
 }
 
-static struct ocf_ops light_ops =
-{
+static struct ocf_ops light_ops = {
 	.get = on_get,
 	.put = on_put_post,
 	.post = on_put_post,
@@ -216,13 +212,12 @@ int ocf_mylight_light_init()
 	OCStackResult ret;
 	unsigned int i;
 
-	for (i = 0; i < sizeof(_light) / sizeof(struct light_resource); i++)
-	{
-		ret = OCCreateResource(&(_light[i].handle), "oic.r.switch.binary",
-				"oic.if.a", _light[i].uri, ocf_mylight_handler, &light_ops,
+	for (i = 0; i < sizeof(_light) / sizeof(struct light_resource); i++) {
+		ret = OCCreateResource(&(_light[i].handle),
+				"oic.r.switch.binary", "oic.if.a",
+				_light[i].uri, ocf_mylight_handler, &light_ops,
 				OC_DISCOVERABLE | OC_OBSERVABLE);
-		if (ret != OC_STACK_OK)
-		{
+		if (ret != OC_STACK_OK) {
 			DBG("OCCreateResource() failed. (ret=%d)", ret);
 			return -1;
 		}

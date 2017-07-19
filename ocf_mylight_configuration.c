@@ -8,8 +8,7 @@
 
 #include "ocf_mylight.h"
 
-struct conf_data
-{
+struct conf_data {
 	char *name;
 	char *loc;
 	char *locn;
@@ -45,8 +44,7 @@ static OCEntityHandlerResult on_get(OCEntityHandlerFlag flag _UNUSED_,
 
 	ocf_mylight_verbose_response(&resp);
 
-	if (OCDoResponse(&resp) != OC_STACK_OK)
-	{
+	if (OCDoResponse(&resp) != OC_STACK_OK) {
 		DBG("Error sending response");
 		OCRepPayloadDestroy(payload);
 		return OC_EH_ERROR;
@@ -65,34 +63,29 @@ static OCEntityHandlerResult on_post(OCEntityHandlerFlag flag _UNUSED_,
 	OCRepPayload *input = (OCRepPayload *) req->payload;
 	char *val = NULL;
 
-	if (OCRepPayloadGetPropString(input, "n", &val))
-	{
+	if (OCRepPayloadGetPropString(input, "n", &val)) {
 		free(_cd.name);
 		_cd.name = val;
 
 		ocf_mylight_device_set_name(_cd.name);
 	}
 
-	if (OCRepPayloadGetPropString(input, "loc", &val))
-	{
+	if (OCRepPayloadGetPropString(input, "loc", &val)) {
 		free(_cd.loc);
 		_cd.loc = val;
 	}
 
-	if (OCRepPayloadGetPropString(input, "locn", &val))
-	{
+	if (OCRepPayloadGetPropString(input, "locn", &val)) {
 		free(_cd.locn);
 		_cd.locn = val;
 	}
 
-	if (OCRepPayloadGetPropString(input, "c", &val))
-	{
+	if (OCRepPayloadGetPropString(input, "c", &val)) {
 		free(_cd.currency);
 		_cd.currency = val;
 	}
 
-	if (OCRepPayloadGetPropString(input, "r", &val))
-	{
+	if (OCRepPayloadGetPropString(input, "r", &val)) {
 		free(_cd.region);
 		_cd.region = val;
 	}
@@ -116,8 +109,7 @@ static OCEntityHandlerResult on_post(OCEntityHandlerFlag flag _UNUSED_,
 
 	ocf_mylight_verbose_response(&resp);
 
-	if (OCDoResponse(&resp) != OC_STACK_OK)
-	{
+	if (OCDoResponse(&resp) != OC_STACK_OK) {
 		DBG("Error sending response");
 		OCRepPayloadDestroy(payload);
 		return OC_EH_ERROR;
@@ -145,9 +137,9 @@ int ocf_mylight_configuration_init()
 	_cd.currency = strdup("KRW");
 
 	ret = OCCreateResource(&_confhandle, "oic.wk.con", "oic.if.rw",
-			"/oic/con", ocf_mylight_handler, &conf_ops, OC_DISCOVERABLE);
-	if (ret != OC_STACK_OK)
-	{
+			"/oic/con", ocf_mylight_handler, &conf_ops,
+			OC_DISCOVERABLE);
+	if (ret != OC_STACK_OK) {
 		DBG("OCCreateResource() failed. (ret=%d)", ret);
 		return -1;
 	}

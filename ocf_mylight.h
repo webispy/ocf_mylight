@@ -12,8 +12,7 @@
 #define DBG(fmt,args...) fprintf(stdout, "\e[1;32m<%s:%d> " fmt "\e[0m\n", __FILE__, __LINE__, ##args)
 #define MSG(fmt,args...) fprintf(stdout, "\e[1;34m" fmt "\e[0m\n", ##args)
 
-struct ocf_ops
-{
+struct ocf_ops {
 	OCEntityHandler get;
 	OCEntityHandler put;
 	OCEntityHandler post;
@@ -22,8 +21,7 @@ struct ocf_ops
 	OCEntityHandler deregister_observe;
 };
 
-struct ocf_dev_ops
-{
+struct ocf_dev_ops {
 	OCDeviceEntityHandler get;
 	OCDeviceEntityHandler put;
 	OCDeviceEntityHandler post;
