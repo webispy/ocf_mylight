@@ -13,7 +13,7 @@
                         },
                         {
                             "href": "/oic/d",
-                            "rt": ["oic.wk.d"],
+                            "rt": ["oic.wk.d", "oic.d.light"],
                             "if": ["oic.if.baseline", "oic.if.r"],
                             "rel": ""
                         },
@@ -49,27 +49,45 @@
                         }
                     ],
                     "permission": 6
+                },
+                {
+                	"subjectuuid": "*",
+                	"resources": [
+                		{
+                			"href": "/a/light/0",
+                			"rt": ["oic.r.switch.binary"],
+                			"if": ["oic.if.a"],
+                			"rel": ""
+                		},
+                		{
+                			"href": "/a/light/0",
+                			"rt": ["oic.r.switch.binary"],
+                			"if": ["oic.if.a"],
+                			"rel": ""
+                		}
+                	],
+                	"permission": 6
                 }
             ]
         },
-        "rowneruuid": "6a757374-776f-726b-4465-765575696430"
+        "rowneruuid": "C0FFEE00-BAB0-FACE-B00C-00BA5EBA1100"
     },
     "pstat": {
         "isop": false,
-        "deviceuuid": "6a757374-776f-726b-4465-765575696430",
+        "deviceuuid": "C0FFEE00-BAB0-FACE-B00C-00BA5EBA1100",
         "cm": 2,
         "tm": 0,
         "om": 4,
         "sm": 4,
-        "rowneruuid": "6a757374-776f-726b-4465-765575696430"
+        "rowneruuid": "C0FFEE00-BAB0-FACE-B00C-00BA5EBA1100"
     },
     "doxm": {
         "oxms": [0],
         "oxmsel": 0,
         "sct": 1,
         "owned": false,
-        "deviceuuid": "6a757374-776f-726b-4465-765575696430",
+        "deviceuuid": "C0FFEE00-BAB0-FACE-B00C-00BA5EBA1100",
         "devowneruuid": "",
-        "rowneruuid": "6a757374-776f-726b-4465-765575696430"
+        "rowneruuid": "C0FFEE00-BAB0-FACE-B00C-00BA5EBA1100"
     }
 }
