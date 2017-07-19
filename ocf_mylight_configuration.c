@@ -138,7 +138,7 @@ int ocf_mylight_configuration_init()
 
 	ret = OCCreateResource(&_confhandle, "oic.wk.con", "oic.if.rw",
 			"/oic/con", ocf_mylight_handler, &conf_ops,
-			OC_DISCOVERABLE);
+			OC_DISCOVERABLE | OC_SECURE);
 	if (ret != OC_STACK_OK) {
 		DBG("OCCreateResource() failed. (ret=%d)", ret);
 		return -1;

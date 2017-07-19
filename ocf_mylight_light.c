@@ -216,7 +216,7 @@ int ocf_mylight_light_init()
 		ret = OCCreateResource(&(_light[i].handle),
 				"oic.r.switch.binary", "oic.if.a",
 				_light[i].uri, ocf_mylight_handler, &light_ops,
-				OC_DISCOVERABLE | OC_OBSERVABLE);
+				OC_DISCOVERABLE | OC_OBSERVABLE | OC_SECURE);
 		if (ret != OC_STACK_OK) {
 			DBG("OCCreateResource() failed. (ret=%d)", ret);
 			return -1;

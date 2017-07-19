@@ -106,7 +106,7 @@ int ocf_mylight_maintenance_init()
 
 	ret = OCCreateResource(&_mnthandle, "oic.wk.mnt", "oic.if.rw",
 			"/oic/mnt", ocf_mylight_handler, &mnt_ops,
-			OC_DISCOVERABLE);
+			OC_DISCOVERABLE | OC_SECURE);
 	if (ret != OC_STACK_OK) {
 		DBG("OCCreateResource() failed. (ret=%d)", ret);
 		return -1;
