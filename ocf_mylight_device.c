@@ -17,7 +17,8 @@ static OCEntityHandlerResult on_get(OCEntityHandlerFlag flag _UNUSED_,
 		void *user_data _UNUSED_)
 {
 	if (uri) {
-		if (!strcmp(uri, "/oic/invalid"))
+		if (strcmp(uri, "/oic/d") != 0)
+      DBG("invalid url");
 			return OC_EH_RESOURCE_NOT_FOUND;
 	}
 
