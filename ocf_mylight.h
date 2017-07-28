@@ -46,9 +46,21 @@ int ocf_mylight_device_init();
 
 int ocf_mylight_light_init();
 void ocf_mylight_light_exit();
+int ocf_mylight_light_get_handle(unsigned int id, OCResourceHandle *handle);
+const char *ocf_mylight_light_peek_uri(unsigned int id);
+int ocf_mylight_light_set_status(unsigned int id, bool status);
+int ocf_mylight_light_get_status(unsigned int id, bool *status);
 
 int ocf_mylight_configuration_init();
 int ocf_mylight_maintenance_init();
 int ocf_mylight_security_init();
+
+int ocf_mylight_notify_init();
+void ocf_mylight_notify_exit();
+int ocf_mylight_notify_add(unsigned int light_id, OCObservationId obs_id);
+int ocf_mylight_notify_del(unsigned int light_id, OCObservationId obs_id);
+int ocf_mylight_notify_emit(unsigned int light_id);
+
+int ocf_mylight_userinput_init();
 
 #endif

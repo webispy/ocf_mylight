@@ -25,6 +25,11 @@ static int server_cb(int argc _UNUSED_, char *argv[] _UNUSED_)
 	ocf_mylight_configuration_init();
 	ocf_mylight_maintenance_init();
 	ocf_mylight_light_init();
+	ocf_mylight_notify_init();
+
+#ifndef CONFIG_ARCH_BOARD_ARTIK053
+	ocf_mylight_userinput_init();
+#endif
 
 	MSG("Entering ocserver main loop...");
 

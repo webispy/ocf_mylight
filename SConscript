@@ -71,7 +71,9 @@ ocserver         = samples_env.Program('ocf_mylight', [
 			'ocf_mylight_configuration.c',
 			'ocf_mylight_maintenance.c',
 			'ocf_mylight_platform.c',
-			'ocf_mylight_security.c'
+			'ocf_mylight_security.c',
+			'ocf_mylight_userinput.c',
+			'ocf_mylight_notify.c'
 			])
 
 list_of_samples = [ocserver,]

@@ -131,12 +131,8 @@ static OCEntityHandlerResult on_put_post(OCEntityHandlerFlag flag _UNUSED_,
 		return OC_EH_ERROR;
 
 	payload = (OCRepPayload *) req->payload;
-	if (OCRepPayloadGetPropBool(payload, "value", &value)) {
-		_light[id].value = value;
-		MSG("value changed to %d", value);
-	}
-
-	gpio_write(_light[id].gpio, _light[id].value);
+	if (OCRepPayloadGetPropBool(payload, "value", &value))
+		ocf_mylight_light_set_status(id, value);
 
 	payload = OCRepPayloadCreate();
 	OCRepPayloadAddResourceType(payload, "oic.r.switch.binary");
@@ -175,25 +171,37 @@ static OCEntityHandlerResult on_del(OCEntityHandlerFlag flag _UNUSED_,
 
 static OCEntityHandlerResult on_register_observe(
 		OCEntityHandlerFlag flag _UNUSED_,
-		OCEntityHandlerRequest *req _UNUSED_, void *user_data _UNUSED_)
+		OCEntityHandlerRequest *req, void *user_data _UNUSED_)
 {
+	int id;
+
 	DBG("Registration request with observation Id %d", req->obsInfo.obsId);
 
-	/* TODO */
+	id = find_light(req->resource);
+	if (id < 0)
+		return OC_EH_ERROR;
 
-	return OC_EH_FORBIDDEN;
+	ocf_mylight_notify_add(id, req->obsInfo.obsId);
+
+	return OC_EH_OK;
 }
 
 static OCEntityHandlerResult on_deregister_observe(
 		OCEntityHandlerFlag flag _UNUSED_,
-		OCEntityHandlerRequest *req _UNUSED_, void *user_data _UNUSED_)
+		OCEntityHandlerRequest *req, void *user_data _UNUSED_)
 {
+	int id;
+
 	DBG("De-registration request for observation Id %d",
 			req->obsInfo.obsId);
 
-	/* TODO */
+	id = find_light(req->resource);
+	if (id < 0)
+		return OC_EH_ERROR;
 
-	return OC_EH_FORBIDDEN;
+	ocf_mylight_notify_del(id, req->obsInfo.obsId);
+
+	return OC_EH_OK;
 }
 
 static struct ocf_ops light_ops = {
@@ -204,6 +212,59 @@ static struct ocf_ops light_ops = {
 	.register_observe = on_register_observe,
 	.deregister_observe = on_deregister_observe
 };
+
+int ocf_mylight_light_get_handle(unsigned int id, OCResourceHandle *handle)
+{
+	if (id >= sizeof(_light) / sizeof(struct light_resource))
+		return -1;
+
+	if (!handle)
+		return -1;
+
+	*handle = _light[id].handle;
+
+	return 0;
+}
+
+const char *ocf_mylight_light_peek_uri(unsigned int id)
+{
+	if (id >= sizeof(_light) / sizeof(struct light_resource))
+		return NULL;
+
+	return _light[id].uri;
+}
+
+int ocf_mylight_light_set_status(unsigned int id, bool status)
+{
+	if (id >= sizeof(_light) / sizeof(struct light_resource))
+		return -1;
+
+	if (_light[id].value == status)
+		return 0;
+
+	_light[id].value = status;
+
+	DBG("Light%u value changed to %d", id, status);
+
+	gpio_write(_light[id].gpio, _light[id].value);
+
+	ocf_mylight_notify_emit(id);
+
+	return 0;
+}
+
+int ocf_mylight_light_get_status(unsigned int id, bool *status)
+{
+	if (id >= sizeof(_light) / sizeof(struct light_resource))
+		return -1;
+
+	if (!status)
+		return -1;
+
+	*status = _light[id].value;
+
+	return 0;
+}
 
 int ocf_mylight_light_init()
 {
