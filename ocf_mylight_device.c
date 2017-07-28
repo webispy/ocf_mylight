@@ -2,8 +2,6 @@
 #include <string.h>
 #include <stdlib.h>
 #include <unistd.h>
-#include <signal.h>
-#include <pthread.h>
 
 #include "ocf_mylight.h"
 
@@ -18,8 +16,9 @@ static OCEntityHandlerResult on_get(OCEntityHandlerFlag flag _UNUSED_,
 {
 	if (uri) {
 		if (strcmp(uri, "/oic/d") != 0)
-      DBG("invalid url");
-			return OC_EH_RESOURCE_NOT_FOUND;
+			DBG("invalid url");
+
+		return OC_EH_RESOURCE_NOT_FOUND;
 	}
 
 	DBG("dev on_get");

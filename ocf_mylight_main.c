@@ -2,8 +2,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <unistd.h>
-#include <signal.h>
-#include <pthread.h>
+#include <time.h>
 
 #include "ocf_mylight.h"
 
