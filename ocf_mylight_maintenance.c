@@ -8,6 +8,9 @@
 
 static OCResourceHandle _mnthandle;
 
+static bool _fr;
+static bool _rb;
+
 static OCEntityHandlerResult on_get(OCEntityHandlerFlag flag _UNUSED_,
 		OCEntityHandlerRequest *req, void *user_data _UNUSED_)
 {
@@ -19,8 +22,8 @@ static OCEntityHandlerResult on_get(OCEntityHandlerFlag flag _UNUSED_,
 	OCRepPayloadAddInterface(payload, "oic.if.baseline");
 	OCRepPayloadAddInterface(payload, "oic.if.rw");
 
-	OCRepPayloadSetPropBool(payload, "fr", false);
-	OCRepPayloadSetPropBool(payload, "rb", false);
+	OCRepPayloadSetPropBool(payload, "fr", _fr);
+	OCRepPayloadSetPropBool(payload, "rb", _rb);
 
 	memset(&resp, 0, sizeof(OCEntityHandlerResponse));
 	resp.requestHandle = req->requestHandle;
@@ -49,30 +52,36 @@ static OCEntityHandlerResult on_post(OCEntityHandlerFlag flag _UNUSED_,
 	OCRepPayload *input = (OCRepPayload *) req->payload;
 	bool val = NULL;
 
+	if (req->query) {
+		/**
+		 * CTT testcase requests POST with if=oic.if.r query.
+		 */
+		if (strncmp(req->query, "if=oic.if.r", 11) == 0)
+			return OC_EH_FORBIDDEN;
+	}
+
 	payload = OCRepPayloadCreate();
 	OCRepPayloadAddResourceType(payload, "oic.wk.mnt");
 	OCRepPayloadAddInterface(payload, "oic.if.baseline");
 	OCRepPayloadAddInterface(payload, "oic.if.rw");
 
 	if (OCRepPayloadGetPropBool(input, "fr", &val)) {
-		OCRepPayloadSetPropBool(payload, "fr", true);
+		_fr = val;
 		/**
 		 * Do Factory Reset
 		 */
 		MSG("Factory Reset request");
-	} else {
-		OCRepPayloadSetPropBool(payload, "fr", false);
 	}
+	OCRepPayloadSetPropBool(payload, "fr", _fr);
 
 	if (OCRepPayloadGetPropBool(input, "rb", &val)) {
-		OCRepPayloadSetPropBool(payload, "rb", true);
+		_rb = val;
 		/**
 		 * Do Reboot
 		 */
 		MSG("Reboot request");
-	} else {
-		OCRepPayloadSetPropBool(payload, "rb", false);
 	}
+	OCRepPayloadSetPropBool(payload, "rb", _rb);
 
 	memset(&resp, 0, sizeof(OCEntityHandlerResponse));
 	resp.requestHandle = req->requestHandle;
@@ -101,6 +110,15 @@ static struct ocf_ops mnt_ops = {
 int ocf_mylight_maintenance_init()
 {
 	OCStackResult ret;
+
+	/**
+	 * FIXME: fr(factory reset) and rb(reboot) status
+	 *
+	 * CTT requests update(POST) for fr and rb properties, CTT then
+	 * retrieve(GET) the properties to confirm it has changed.
+	 */
+	_fr = false;
+	_rb = false;
 
 	/**
 	 * FIXME: mismatch Spec and CTT
