@@ -2,10 +2,17 @@
 
 # OCF Light sample
 - Smart Home Light sample.
-- You can control 2 LEDs on the ARTIK 053 STARTER BOARD (TizenRT version only)
-  - /a/light/0
-  - /a/light/1
-- Iotivity secured mode not supported. (TODO)
+- TizenRT version
+  - Iotivity 1.2.1
+  - You can control 2 LEDs on the ARTIK 053 STARTER BOARD
+    - /a/light/0
+    - /a/light/1
+  - Iotivity secured mode not supported. (TODO)
+- Linux version
+  - IoTivity 1.3 (oic_1.1 branch uses IoTivity 1.2.1)
+  - Support 2 resources (virtual)
+    - /a/light/0
+    - /a/light/1
 - This source code was referenced to [TizenRT/apps/examples/iotivity_simpleserver](https://github.com/Samsung/TizenRT/tree/master/apps/examples/iotivity_simpleserver).
 
 # Build
@@ -18,7 +25,7 @@
 ```sh
 git clone https://github.com/Samsung/TizenRT.git
 cd TizenRT
-git clone https://github.com/webispy/ocf_mylight apps/examples/ocf_mylight
+git clone https://github.com/webispy/ocf_mylight -b oic_1.1 apps/examples/ocf_mylight
 ```
 - Configure / Build
 ```sh
@@ -40,26 +47,27 @@ make
 ### Build
 - Download
 ```sh
-git clone https://github.com/iotivity/iotivity.git -b 1.2-rel
+git clone https://github.com/iotivity/iotivity.git -b 1.3-rel
 cd iotivity
-git clone https://github.com/01org/tinycbor.git extlibs/tinycbor/tinycbor -b v0.4
+git clone https://github.com/01org/tinycbor.git extlibs/tinycbor/tinycbor
+git clone https://github.com/ARMmbed/mbedtls.git extlibs/mbedtls/mbedtls -b mbedtls-2.4.2
 git clone https://github.com/webispy/ocf_mylight resource/csdk/stack/samples/linux/ocf_mylight
 ```
 
-- Modify resource/SConscript
+- Modify resource/csdk/stack/samples/SConscript
 ```sh
-diff --git a/resource/SConscript b/resource/SConscript
-index 249730d..1f6b36c 100644
---- a/resource/SConscript
-+++ b/resource/SConscript
-@@ -72,6 +72,7 @@ if target_os in ['linux', 'windows']:
-        # Build C Samples
-        SConscript('csdk/stack/test/linux/SConscript')
-        SConscript('csdk/stack/samples/linux/SimpleClientServer/SConscript')
-+       SConscript('csdk/stack/samples/linux/ocf_mylight/SConscript')
- 
-         if env.get('SECURED') == '1':
-                # Build secure samples
+diff --git a/resource/csdk/stack/samples/SConscript b/resource/csdk/stack/samples/SConscript
+index f5e9a6030..ae1fedbad 100644
+--- a/resource/csdk/stack/samples/SConscript
++++ b/resource/csdk/stack/samples/SConscript
+@@ -25,6 +25,7 @@ target_os = stacksamples_env.get('TARGET_OS')
+ if target_os in ['linux', 'windows']:
+     # Build C Samples
+     SConscript('linux/OCSample/SConscript', 'stacksamples_env')
++    SConscript('linux/ocf_mylight/SConscript', 'stacksamples_env')
+     SConscript('linux/SimpleClientServer/SConscript', 'stacksamples_env')
+
+     if stacksamples_env.get('SECURED') == '1':
 ```
 
 - Build with debug message

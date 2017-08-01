@@ -1,6 +1,6 @@
 #******************************************************************
 #
-# Copyright 2014 Intel Mobile Communications GmbH All Rights Reserved.
+# Copyright: 2016, Samsung Electronics Co., Ltd.
 #
 #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 #
@@ -18,52 +18,35 @@
 #
 #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 
-thread_env = SConscript('#build_common/thread.scons')
-samples_env = thread_env.Clone()
-target_os = samples_env.get('TARGET_OS')
-with_ra = samples_env.get ('WITH_RA')
+Import('stacksamples_env')
+mysample_env = stacksamples_env.Clone()
+
+target_os = stacksamples_env.get('TARGET_OS')
 
 ######################################################################
 # Build flags
 ######################################################################
-with_upstream_libcoap = samples_env.get('WITH_UPSTREAM_LIBCOAP')
-if with_upstream_libcoap == '1':
-	# For bring up purposes only, we manually copy the forked version to where the unforked version is downloaded.
-	samples_env.AppendUnique(CPPPATH = ['#extlibs/libcoap/libcoap/include'])
-else:
-	# For bring up purposes only, the forked version will live here.
-	samples_env.AppendUnique(CPPPATH = ['../../../../../connectivity/lib/libcoap-4.1.1/include'])
+mysample_env.PrependUnique(CPPPATH=[
+    '#/resource/csdk/include',
+    '#/resource/csdk/stack/include',
+    '../../../../security/include',
+])
 
-samples_env.PrependUnique(CPPPATH = [
-		'../../../../logger/include',
-		'../../../../stack/include',
-		'../../../../security/include',
-		'../../../../../../extlibs/cjson',
-		'../../../../../../extlibs/boost/boost',
-		'../../../../../oc_logger/include',
-		])
+if target_os not in ['msys_nt', 'windows']:
+    mysample_env.PrependUnique(LIBS=['connectivity_abstraction',])
 
-compiler = samples_env.get('CXX')
-if 'g++' in compiler:
-	samples_env.AppendUnique(CXXFLAGS = ['-std=c++0x', '-Wall'])
+mysample_env.PrependUnique(LIBS=['octbstack',])
 
-samples_env.AppendUnique(RPATH = [samples_env.get('BUILD_DIR')])
-samples_env.AppendUnique(LIBPATH = [samples_env.get('BUILD_DIR')])
+if mysample_env.get('SECURED') == '1':
+    if mysample_env.get('WITH_TCP') == True:
+        mysample_env.AppendUnique(LIBS=['mbedtls', 'mbedx509', 'mbedcrypto'])
 
-samples_env.PrependUnique(LIBS = ['octbstack', 'ocsrm', 'connectivity_abstraction', 'coap'])
-
-if target_os not in ['arduino', 'windows', 'darwin', 'ios', 'msys_nt']:
-	samples_env.AppendUnique(LIBS = ['rt'])
-
-if target_os not in ['windows']:
-	samples_env.PrependUnique(LIBS = ['m'])
-
-samples_env.AppendUnique(CPPDEFINES = ['TB_LOG'])
+mysample_env.AppendUnique(LIBPATH=[mysample_env.get('BUILD_DIR'),])
 
 ######################################################################
 # Source files and Targets
 ######################################################################
-ocserver         = samples_env.Program('ocf_mylight', [
+ocserver = mysample_env.Program('ocf_mylight', [
 			'ocf_mylight_main.c',
 			'ocf_mylight_device.c',
 			'ocf_mylight_light.c',
@@ -75,10 +58,3 @@ ocserver         = samples_env.Program('ocf_mylight', [
 			'ocf_mylight_userinput.c',
 			'ocf_mylight_notify.c'
 			])
-
-list_of_samples = [ocserver,]
-Alias("samples", list_of_samples)
-
-samples_env.AppendTarget('samples')
-
-

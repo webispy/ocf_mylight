@@ -10,9 +10,10 @@ before_install:
   - sudo apt-get install -y libboost-dev libboost-program-options-dev libboost-thread-dev uuid-dev libexpat1-dev libglib2.0-dev libsqlite3-dev libcurl4-gnutls-dev
 
 install:
-  - git clone https://github.com/iotivity/iotivity.git -b 1.2-rel
-  - git clone https://github.com/01org/tinycbor.git iotivity/extlibs/tinycbor/tinycbor -b v0.4
-  - sed -i "75i\        SConscript('csdk/stack/samples/linux/ocf_mylight/SConscript')" iotivity/resource/SConscript
+  - git clone https://github.com/iotivity/iotivity.git -b 1.3-rel
+  - git clone https://github.com/01org/tinycbor.git iotivity/extlibs/tinycbor/tinycbor
+  - git clone https://github.com/ARMmbed/mbedtls.git iotivity/extlibs/mbedtls/mbedtls -b mbedtls-2.4.2
+  - sed -i "28i\    SConscript('linux/ocf_mylight/SConscript', 'stacksamples_env')" iotivity/resource/csdk/stack/samples/SConscript
   - git clone https://github.com/webispy/ocf_mylight iotivity/resource/csdk/stack/samples/linux/ocf_mylight
 
 script:
