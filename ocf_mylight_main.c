@@ -13,7 +13,9 @@ static int server_cb(int argc _UNUSED_, char *argv[] _UNUSED_)
 	MSG("IoTivity Demo - IOTIVITY version is %s", IOTIVITY_VERSION);
 	MSG("OCF My Light Server is starting...");
 
+#ifndef CONFIG_ARCH_BOARD_ARTIK053
 	ocf_mylight_security_init();
+#endif
 
 	if (OCInit(NULL, 0, OC_SERVER) != OC_STACK_OK) {
 		DBG("OCStack init error");

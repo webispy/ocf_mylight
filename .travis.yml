@@ -13,7 +13,7 @@ install:
   - git clone https://github.com/iotivity/iotivity.git -b 1.2-rel
   - git clone https://github.com/01org/tinycbor.git iotivity/extlibs/tinycbor/tinycbor -b v0.4
   - sed -i "75i\        SConscript('csdk/stack/samples/linux/ocf_mylight/SConscript')" iotivity/resource/SConscript
-  - git clone https://github.com/webispy/ocf_mylight iotivity/resource/csdk/stack/samples/linux/ocf_mylight
+  - git clone https://github.com/webispy/ocf_mylight -b oic_1.1 iotivity/resource/csdk/stack/samples/linux/ocf_mylight
 
 script:
   - cd iotivity; scons -j4 RELEASE=True LOGGING=False

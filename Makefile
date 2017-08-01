@@ -44,7 +44,7 @@ THREADEXEC = TASH_EXECMD_SYNC
 
 # Example
 ASRCS =
-CSRCS = ocf_mylight_device.c ocf_mylight_light.c ocf_mylight_verbose.c ocf_mylight_configuration.c ocf_mylight_maintenance.c ocf_mylight_platform.c
+CSRCS = ocf_mylight_device.c ocf_mylight_light.c ocf_mylight_verbose.c ocf_mylight_configuration.c ocf_mylight_maintenance.c ocf_mylight_platform.c ocf_mylight_notify.c
 MAINSRC = ocf_mylight_main.c
 
 # port_tinyara.c from apps/examples/iotivity_simpleServer
