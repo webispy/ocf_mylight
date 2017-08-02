@@ -8,7 +8,7 @@
 
 struct conf_data {
 	char *name;
-	char *loc;
+	double loc[2];
 	char *locn;
 	char *currency;
 	char *region;
@@ -16,6 +16,7 @@ struct conf_data {
 
 static struct conf_data _cd;
 static OCResourceHandle _confhandle;
+static size_t _loc_dimensions[MAX_REP_ARRAY_DEPTH] = {2, 0, 0};
 
 static OCEntityHandlerResult on_get(OCEntityHandlerFlag flag _UNUSED_,
 		OCEntityHandlerRequest *req, void *user_data _UNUSED_)
@@ -28,8 +29,8 @@ static OCEntityHandlerResult on_get(OCEntityHandlerFlag flag _UNUSED_,
 	OCRepPayloadAddInterface(payload, "oic.if.baseline");
 	OCRepPayloadAddInterface(payload, "oic.if.rw");
 
+	OCRepPayloadSetDoubleArray(payload, "loc", _cd.loc, _loc_dimensions);
 	OCRepPayloadSetPropString(payload, "n", _cd.name);
-	OCRepPayloadSetPropString(payload, "loc", _cd.loc);
 	OCRepPayloadSetPropString(payload, "locn", _cd.locn);
 	OCRepPayloadSetPropString(payload, "c", _cd.currency);
 	OCRepPayloadSetPropString(payload, "r", _cd.region);
@@ -60,6 +61,7 @@ static OCEntityHandlerResult on_post(OCEntityHandlerFlag flag _UNUSED_,
 	OCRepPayload *payload = NULL;
 	OCRepPayload *input = (OCRepPayload *) req->payload;
 	char *val = NULL;
+	double *loc = NULL;
 
 	if (OCRepPayloadGetPropString(input, "n", &val)) {
 		free(_cd.name);
@@ -68,9 +70,12 @@ static OCEntityHandlerResult on_post(OCEntityHandlerFlag flag _UNUSED_,
 		ocf_mylight_device_set_name(_cd.name);
 	}
 
-	if (OCRepPayloadGetPropString(input, "loc", &val)) {
-		free(_cd.loc);
-		_cd.loc = val;
+	if (OCRepPayloadGetDoubleArray(input, "loc", &loc, _loc_dimensions)) {
+		if (loc) {
+			_cd.loc[0] = loc[0];
+			_cd.loc[1] = loc[1];
+			free(loc);
+		}
 	}
 
 	if (OCRepPayloadGetPropString(input, "locn", &val)) {
@@ -93,8 +98,8 @@ static OCEntityHandlerResult on_post(OCEntityHandlerFlag flag _UNUSED_,
 	OCRepPayloadAddInterface(payload, "oic.if.baseline");
 	OCRepPayloadAddInterface(payload, "oic.if.rw");
 
+	OCRepPayloadSetDoubleArray(payload, "loc", _cd.loc, _loc_dimensions);
 	OCRepPayloadSetPropString(payload, "n", _cd.name);
-	OCRepPayloadSetPropString(payload, "loc", _cd.loc);
 	OCRepPayloadSetPropString(payload, "locn", _cd.locn);
 	OCRepPayloadSetPropString(payload, "c", _cd.currency);
 	OCRepPayloadSetPropString(payload, "r", _cd.region);
@@ -129,7 +134,8 @@ int ocf_mylight_configuration_init()
 	OCStackResult ret;
 
 	_cd.name = strdup(ocf_mylight_device_get_name());
-	_cd.loc = strdup("37.532600,127.024612");
+	_cd.loc[0] = 37.532600;
+	_cd.loc[1] = 127.024612;
 	_cd.locn = strdup("My home");
 	_cd.region = strdup("Korea (Gyeonggi)");
 	_cd.currency = strdup("KRW");
