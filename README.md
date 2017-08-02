@@ -72,11 +72,11 @@ index f5e9a6030..ae1fedbad 100644
 
 - Build with debug message
 ```sh
-scons -j8 RELEASE=False SECURED=1
+scons -j8 RELEASE=False SECURED=1 RD_MODE=SERVER
 ```
 - Build without debug message
 ```sh
-scons -j8 RELEASE=True LOGGING=False SECURED=1
+scons -j8 RELEASE=True LOGGING=False SECURED=1 RD_MODE=SERVER
 ```
 
 # Run
