@@ -7,7 +7,7 @@
 
 static OCDeviceInfo _di =
 {
-	.specVersion = "core.1.1.0"
+	.specVersion = "ocf.1.1.0"
 };
 
 static OCEntityHandlerResult on_get(OCEntityHandlerFlag flag _UNUSED_,
@@ -85,7 +85,7 @@ int ocf_mylight_device_init()
 	OCSetDefaultDeviceEntityHandler(ocf_mylight_dev_handler, &dev_ops);
 
 	_di.deviceName = strdup("ARTIK-053-Light");
-	_di.dataModelVersions = OCCreateOCStringLL("res.1.1.0,sh.1.1.0");
+	_di.dataModelVersions = OCCreateOCStringLL("ocf.res.1.1.0,ocf.sh.1.1.0");
 	_di.types = OCCreateOCStringLL("oic.d.light");
 
 	ret = OCSetDeviceInfo(_di);

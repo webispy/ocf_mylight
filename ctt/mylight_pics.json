@@ -2,10 +2,23 @@
     "role": "Server",
     "supportedVerticalProfile": [ "Smart Home" ],
     "supportedDeviceTypes": [ "oic.d.light" ],
-    "icv": "core.1.1.0",
-    "dmv": "res.1.1.0,sh.1.1.0",
-    "resources": [ "oic.r.switch.binary", "oic.wk.con", "oic.wk.mnt" ],
+    "icv": "ocf.1.1.0",
+    "dmv": "ocf.res.1.1.0,ocf.sh.1.1.0",
+    "resources": [
+        "oic.r.switch.binary",
+        "oic.wk.con",
+        "oic.wk.mnt",
+        "oic.r.acl2",
+        "oic.r.crl",
+        "oic.r.csr",
+        "oic.r.roles"
+    ],
     "jurisdictionSwitch": false,
     "OTM": [ "oic.sec.doxm.jw" ],
+    "contentFormatVersion": [ "1.0.0" ],
+    "acceptVersion": [ "1.0.0" ],
+    "observableOICRES": false,
+    "sct": 1,
+    "persistentDeviceuuid": true,
     "implementsWKCON": true
 }
