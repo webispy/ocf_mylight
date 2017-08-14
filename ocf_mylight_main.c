@@ -22,6 +22,9 @@ static int server_cb(int argc _UNUSED_, char *argv[] _UNUSED_)
 		return 0;
 	}
 
+	MSG("Supported Endpoint Transport Protocol Suites: 0x%X",
+			OCGetSupportedEndpointTpsFlags());
+
 	ocf_mylight_playform_init();
 	ocf_mylight_device_init();
 	ocf_mylight_configuration_init();
