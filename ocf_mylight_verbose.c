@@ -5,6 +5,45 @@
 
 #include "ocf_mylight.h"
 
+struct num_str {
+	int number;
+	char *str;
+};
+
+/**
+ * CoAP Option Numbers
+ * http://www.iana.org/assignments/core-parameters/core-parameters.xhtml
+ */
+static struct num_str _coap_options[] = {
+	{ 0, "Reserved" },
+	{ 1, "If-Match" },
+	{ 3, "Uri-Host" },
+	{ 4, "ETag" },
+	{ 5, "If-None-Match" },
+	{ 6, "Observe" },
+	{ 7, "Uri-Port" },
+	{ 8, "Location-Path" },
+	{ 11, "Uri-Path" },
+	{ 12, "Content-Format" },
+	{ 14, "Max-Age" },
+	{ 15, "Uri-Query" },
+	{ 17, "Accept" },
+	{ 20, "Location-Query" },
+	{ 23, "Block2" },
+	{ 27, "Block1" },
+	{ 28, "Size2" },
+	{ 35, "Proxy-Uri" },
+	{ 39, "Proxy-Scheme" },
+	{ 60, "Size1" },
+	{ 128, "Reserved" },
+	{ 132, "Reserved" },
+	{ 136, "Reserved" },
+	{ 140, "Reserved" },
+	{ 258, "No-Response" },
+	{ 2049, "OCF-Accept-Content-Format-Version" },
+	{ 2053, "OCF-Content-Format-Version" },
+};
+
 static void _method(OCMethod method)
 {
 	if (method & OC_REST_NOMETHOD)
@@ -119,15 +158,43 @@ void ocf_mylight_verbose_payload(const char *indent, OCPayload *payload)
 		printf("%s  - payload-type: %d\n", indent, payload->type);
 }
 
+static const char *_coap_opt_name(int number)
+{
+	unsigned int i;
+
+	for (i = 0; i < sizeof(_coap_options) / sizeof(struct num_str); i++) {
+		if (_coap_options[i].number == number)
+			return _coap_options[i].str;
+	}
+
+	return "Unknown";
+}
+
 static void _header_options(OCHeaderOption *opt, uint8_t count)
 {
 	int i;
+	int j;
 
 	printf("  - vendor specific header count: %d\n", count);
-	for (i = 0; i < count; i++)
-		printf("  - [%d] proto_id=%d, option_id=0x%x, option_len=%d\n",
-				i, opt[i].protocolID, opt[i].optionID,
-				opt[i].optionLength);
+	for (i = 0; i < count; i++) {
+		printf("    - [%d] ", i);
+
+		if (opt[i].protocolID != 2) {
+			printf("Invalid protocol(%d), option_id=0x%x, len=%d\n",
+					opt[i].protocolID, opt[i].optionID, opt[i].optionLength);
+			continue;
+		}
+
+		printf("CoAP option_id=0x%x (%s), option_len=%d\n", opt[i].optionID,
+				_coap_opt_name(opt[i].optionID), opt[i].optionLength);
+
+		if (opt[i].optionLength > 0) {
+			printf("      Data: ");
+			for (j = 0; j < opt[i].optionLength; j++)
+				printf("%02X ", opt[i].optionData[j]);
+			printf("\n");
+		}
+	}
 }
 
 void ocf_mylight_verbose_request(OCEntityHandlerFlag flag,
