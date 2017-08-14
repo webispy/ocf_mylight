@@ -5,6 +5,7 @@
 #include <fcntl.h>
 
 #include "ocf_mylight.h"
+#include <pinoxmcommon.h>
 
 static FILE* on_open(const char *path, const char *mode)
 {
@@ -41,6 +42,16 @@ static int on_unlink(const char *path)
 	return unlink(path);
 }
 
+static void on_display_pin(char *pin, size_t length, void *user_data _UNUSED_)
+{
+	MSG("PIN CODE: '%s' (pin length=%zd)", pin, length);
+}
+
+static void on_close_pin(void)
+{
+	MSG("PIN CLOSED");
+}
+
 OCPersistentStorage ps = {
 	.open = on_open,
 	.read = on_read,
@@ -51,7 +62,23 @@ OCPersistentStorage ps = {
 
 int ocf_mylight_security_init()
 {
+	OCStackResult ret;
+
 	OCRegisterPersistentStorageHandler(&ps);
+
+	ret = SetDisplayPinWithContextCB(on_display_pin, NULL);
+	if (ret != OC_STACK_OK) {
+		DBG("SetDisplayPinWithContextCB failed! (ret=%d)", ret);
+		return -1;
+	}
+
+	SetClosePinDisplayCB(on_close_pin);
+
+	ret = SetRandomPinPolicy(8, NUM_PIN);
+	if (ret != OC_STACK_OK) {
+		DBG("SetRandomPinPolicy failed! (ret=%d)", ret);
+		return -1;
+	}
 
 	return 0;
 }

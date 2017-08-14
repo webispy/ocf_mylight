@@ -14,7 +14,7 @@
         "oic.r.roles"
     ],
     "jurisdictionSwitch": false,
-    "OTM": [ "oic.sec.doxm.jw" ],
+    "OTM": [ "oic.sec.doxm.jw", "oic.sec.doxm.rdp" ],
     "contentFormatVersion": [ "1.0.0" ],
     "acceptVersion": [ "1.0.0" ],
     "observableOICRES": false,

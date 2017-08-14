@@ -29,7 +29,8 @@ target_os = stacksamples_env.get('TARGET_OS')
 mysample_env.PrependUnique(CPPPATH=[
     '#/resource/csdk/include',
     '#/resource/csdk/stack/include',
-    '../../../../security/include',
+    '#/resource/csdk/security/include',
+    '#/resource/csdk/connectivity/api',
 ])
 
 if target_os not in ['msys_nt', 'windows']:

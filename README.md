@@ -96,7 +96,7 @@ TASH> ocf_mylight
 #### Create a dat file (Convert json to dat using json2cbor tool)
 ```sh
 cd {iotivity-repo}/out/linux/x86_64/debug/resource/csdk/stack/samples/linux/ocf_mylight
-../../../../security/tool/json2cbor json/oic_svr_db_server_justworks.json oic_svr_db_server.dat
+../../../../security/tool/json2cbor json/oic_svr_db_server_justworks_rpin.json oic_svr_db_server.dat
 ```
 
 #### Run
@@ -109,7 +109,7 @@ cd {iotivity-repo}/out/linux/x86_64/debug/resource/csdk/stack/samples/linux/ocf_
 #### Create a dat file (Convert json to dat using json2cbor tool)
 ```sh
 cd {iotivity-repo}/out/linux/x86_64/release/resource/csdk/stack/samples/linux/ocf_mylight
-../../../../security/tool/json2cbor json/oic_svr_db_server_justworks.json oic_svr_db_server.dat
+../../../../security/tool/json2cbor json/oic_svr_db_server_justworks_rpin.json oic_svr_db_server.dat
 ```
 
 #### Run

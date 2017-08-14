@@ -60,7 +60,7 @@
         "rowneruuid": "00000000-0000-0000-0000-000000000000"
     },
     "doxm": {
-        "oxms": [0],
+        "oxms": [0,1],
         "oxmsel": 0,
         "sct": 1,
         "owned": false,
