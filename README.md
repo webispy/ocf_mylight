@@ -1,4 +1,5 @@
 [![Build Status](https://travis-ci.org/webispy/ocf_mylight.svg?branch=master)](https://travis-ci.org/webispy/ocf_mylight)
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fwebispy%2Focf_mylight.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2Fwebispy%2Focf_mylight?ref=badge_shield)
 
 # OCF Light sample
 - Smart Home Light sample.
@@ -117,3 +118,7 @@ cd {iotivity-repo}/out/linux/x86_64/release/resource/csdk/stack/samples/linux/oc
 cd {iotivity-repo}/out/linux/x86_64/release/resource/csdk/stack/samples/linux/ocf_mylight
 ./ocf_mylight
 ```
+
+
+## License
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fwebispy%2Focf_mylight.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2Fwebispy%2Focf_mylight?ref=badge_large)
